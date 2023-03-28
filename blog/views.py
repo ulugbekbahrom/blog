@@ -14,18 +14,29 @@ class BlogListView(ListView):
 class BlogDetailView(DetailView):
     model = Post
     template_name = 'post_detail.html'
+    
 
 class BlogCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
     template_name = 'post_new.html'
     fields = ['title', 'author', 'body']
 
+
 class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     template_name = 'post_edit.html'
     fields = ['title', 'body']
 
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
+    
+
 class BlogDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('home')
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
