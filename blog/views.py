@@ -4,8 +4,9 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Post
+from django.db.models import Q
 
-# Create your views here.
+
 class BlogListView(ListView):
     model = Post
     template_name = 'home.html'
@@ -40,3 +41,16 @@ class BlogDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         obj = self.get_object()
         return obj.author == self.request.user
+
+
+
+def search(request):
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        posts = Post.objects.filter(
+            Q(title__contains=searched) | Q(body__contains=searched)
+        )
+        return render(request, 'search.html', {'searched': searched, 'posts': posts})
+    else:
+        return render(request, 'search.html')
+        

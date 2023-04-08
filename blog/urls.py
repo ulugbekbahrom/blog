@@ -5,9 +5,11 @@ from .views import (
     BlogCreateView, 
     BlogUpdateView, 
     BlogDeleteView,
+    search,
 )
 
 urlpatterns = [
+    path('search/', search, name='search'),
     path('post/new/', BlogCreateView.as_view(), name='post_new'),
     path('post/<int:pk>/', BlogDetailView.as_view(), name='post_detail'),
     path('post/<int:pk>/edit/', BlogUpdateView.as_view(), name='post_edit'),
